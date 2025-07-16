@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Undangan Digital Multi-Halaman</title>
+  <style>
+    body { margin: 0; font-family: 'Georgia', serif; overflow-x: hidden; }
+    section { display: none; padding: 30px; min-height: 100vh; box-sizing: border-box; }
+    .active { display: block; animation: fadeIn 0.8s ease; }
+    .nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); }
+    .nav button { margin: 0 10px; padding: 10px 20px; background: #955b72; color: white; border: none; border-radius: 5px; cursor: pointer;}
+    header h1 { text-align: center; color: #955b72; }
+    footer { text-align: center; color: #888; margin-top: 20px; }
+    .countdown { font-size: 2em; text-align: center; margin: 20px 0; color: #8c4c5b; }
+    .barcode-container { text-align: center; margin-top: 30px; }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  </style>
+</head>
+<body>
 
+  <!-- Musik Latar -->
+  <audio id="bg-music" src="musik-latar.mp3" autoplay loop></audio>
+
+  <!-- Halaman 1: Sambutan -->
+  <section id="page1" class="active">
+    <header><h1>Undangan Pernikahan</h1></header>
+    <p style="text-align:center;">Dengan memohon rahmat dan ridho Allah SWT,<br>
+       Kami mengundang Anda untuk hadir di hari bahagia kami.</p>
+  </section>
+
+  <!-- Halaman 2: Pasangan & Detail Acara -->
+  <section id="page2">
+    <header><h1>Alya & Reza</h1></header>
+    <div style="text-align:center; font-size:1.2em; color:#6e4c4c;">
+      Minggu, <strong>24 Agustus 2025</strong><br>
+      Akad: 09.00 WIB • Resepsi: 11.00–14.00 WIB<br>
+      Gedung Serbaguna Citra Indah, Bogor
+    </div>
+    <div class="countdown" id="countdown"></div>
+  </section>
+
+  <!-- Halaman 3: Konfirmasi & Transfer -->
+  <section id="page3">
+    <header><h1>RSVP & Transfer</h1></header>
+    <p style="text-align:center;">
+      Konfirmasi kehadiran via WhatsApp:<br>
+      <a href="https://wa.me/6281234567890" target="_blank"
+         style="color:#955b72; text-decoration:none; font-size:1.1em;">Klik di sini</a>
+    </p>
+    <p style="text-align:center;">Donasi & Hadiah:</p>
+    <div style="text-align:center;">
+      <img src="barcode-transfer.png" alt="Barcode Transfer" style="max-width:200px;">
+      <p>Scan untuk transfer.</p>
+    </div>
+  </section>
+
+  <!-- Navigasi Halaman -->
+  <div class="nav">
+    <button onclick="showPage(1)">1</button>
+    <button onclick="showPage(2)">2</button>
+    <button onclick="showPage(3)">3</button>
+  </div>
+
+  <footer>Terima kasih atas doa dan restu Anda ❤️</footer>
+
+  <script>
+    // Logika multi-halaman
+    function showPage(n) {
+      document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById('page' + n).classList.add('active');
+    }
+
+    // Hitung mundur
+    const countTarget = new Date('2025-08-24T09:00:00');
+    const cdElem = document.getElementById('countdown');
+    function updateCountdown() {
+      const now = new Date();
+      const diff = countTarget - now;
+      if (diff <= 0) {
+        cdElem.textContent = 'Acara telah dimulai!';
+        clearInterval(timer);
+        return;
+      }
+      const days = Math.floor(diff/1000/60/60/24);
+      const hrs = Math.floor((diff/1000/60/60)%24);
+      const mins = Math.floor((diff/1000/60)%60);
+      const secs = Math.floor((diff/1000)%60);
+      cdElem.textContent = `${days} hari ${hrs} j ${mins} m ${secs} d`;
+    }
+    const timer = setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Musik auto-play policies handling
+    document.body.addEventListener('click', () => {
+      const music = document.getElementById('bg-music');
+      if (music.paused) music.play();
+    });
+  </script>
+</body>
+</html>
